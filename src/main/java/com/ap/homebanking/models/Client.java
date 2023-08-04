@@ -13,11 +13,11 @@ public class Client {
 
     public Client(){}
 
-     public Client(String firstName, String lastName, String mail){
-        this.getId();
-        this.setFirstName(firstName);
-        this.setLastName(lastName);
-        this.setMail(mail);
+     public Client(String id,String firstName, String lastName, String mail){
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.mail = mail;
      }
 
     public String getId() {
@@ -48,5 +48,3 @@ public class Client {
         this.mail = mail;
     }
 }
-
-
