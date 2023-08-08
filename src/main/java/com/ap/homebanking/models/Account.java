@@ -25,8 +25,10 @@ public class Account {
     private Double balance;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "account_id")
-    private Client account;
+    @JoinColumn(name = "owner_id")
+    private Client owner;
+
+
 
     public Account(){}
 
@@ -65,12 +67,12 @@ public class Account {
         this.balance = balance;
     }
 
-    public Client getAccount() {
-        return account;
+    public Client getOwner() {
+        return owner;
     }
 
-    public void setAccount(Client account) {
-        this.account = account;
+    public void setOwner(Client owner) {
+        this.owner = owner;
     }
 
 
