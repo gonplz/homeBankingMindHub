@@ -1,26 +1,28 @@
 package com.ap.homebanking.models;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
 
 @Entity
 public class Client {
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
+    @GenericGenerator(name = "native", strategy = "native")
+    private Long id;
     private String firstName;
     private String lastName;
     private String mail;
 
     public Client(){}
 
-     public Client(String id,String firstName, String lastName, String mail){
-        this.id = id;
+     public Client(String firstName, String lastName, String mail){
         this.firstName = firstName;
         this.lastName = lastName;
         this.mail = mail;
      }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
@@ -47,4 +49,5 @@ public class Client {
     public void setMail(String mail) {
         this.mail = mail;
     }
+
 }
