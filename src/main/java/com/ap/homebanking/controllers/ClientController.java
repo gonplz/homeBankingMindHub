@@ -12,13 +12,9 @@ public class ClientController {
     @Autowired
     public AccountRepository accountRepository;
 
-    public class List<Account> getAll(){
-        return findAll;
-    }
+//    public class List<Account> getAll(){
+//        return findAll;
+//    }
 
   //  private void addAtrribute() {
 }
-
-//    public String greeting(@RequestParam("name") String name, Model model) {
-//        model.addAttribute("name", name);
-//        return "greeting";
