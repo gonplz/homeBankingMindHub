@@ -29,7 +29,6 @@ public class Account {
     private Client owner;
 
 
-
     public Account(){}
 
     public Account(String number, String creationDate, Double balance){

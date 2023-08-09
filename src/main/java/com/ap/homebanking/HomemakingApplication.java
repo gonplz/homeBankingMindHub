@@ -8,7 +8,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -30,12 +29,17 @@ public class HomemakingApplication {
 			Account account1 = new Account("VIN001","",5000.0);
 			LocalDate today = LocalDate.now();
 			Account account2 = new Account("VIN002","",7500.0);
-			LocalDate today2 = LocalDate.now();
+			account2.setCreationDate(today.plusDays(1));
 
 			clientRepository.save(client1);
 			clientRepository.save(client2);
+
+			client1.addAccount(account1);
+			client1.addAccount(account2);
+
 			accountRepository.save(account1);
 			accountRepository.save(account2);
+
 		});
 	}
 }
