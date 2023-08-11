@@ -9,10 +9,8 @@ import java.util.stream.Collectors;
 public class AccountDTO {
     private Long id;
     private String number;
-
     private LocalDate date;
     private Double balance;
-
     private Set<TransactionDTO> transactions;
 
     public AccountDTO (Account account){
@@ -20,7 +18,7 @@ public class AccountDTO {
         this.number = account.getNumber();
         this.date = account.getCreationDate();
         this.balance = account.getBalance();
-        transactions= account.getTransactions().stream()
+        this.transactions= account.getTransactions().stream()
                 .map(element -> new TransactionDTO(element))
                 .collect(Collectors.toSet());
     }

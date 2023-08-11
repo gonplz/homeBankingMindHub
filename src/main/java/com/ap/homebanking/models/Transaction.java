@@ -3,7 +3,7 @@ package com.ap.homebanking.models;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.sql.Types;
+//import java.sql.Types;
 import java.time.LocalDateTime;
 
 @Entity
@@ -13,8 +13,10 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
     private Long id;
-    private Types type;
+    //private Types type;
     private Double amount;
+
+    private TransactionType type;
     private String description;
     private LocalDateTime date;
 
@@ -24,25 +26,26 @@ public class Transaction {
 
     public Transaction(){}
 
-    public Transaction(Types type, Double amount, String description, LocalDateTime date){
+    public Transaction (Double amount,TransactionType type, String description, LocalDateTime date){
 
-        this.type = type;
         this.amount = amount;
+        this.type = type;
         this.description = description;
         this.date = date;
+    }
+
+    public TransactionType getType() {
+        return type;
+    }
+
+    public void setType(TransactionType type) {
+        this.type = type;
     }
 
     public Long getId() {
         return id;
     }
 
-    public Types getType() {
-        return type;
-    }
-
-    public void setType(Types type) {
-        this.type = type;
-    }
 
     public Double getAmount() {
         return amount;
