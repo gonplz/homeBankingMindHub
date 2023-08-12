@@ -1,26 +1,31 @@
 package com.ap.homebanking.models;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Client {
     @Id
-    private String id;
-    private String firstName;
-    private String lastName;
-    private String mail;
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
+    @GenericGenerator(name = "native", strategy = "native")
+    private Long id;
+    private String firstName, lastName, mail;
+
+    @OneToMany(mappedBy="owner", fetch=FetchType.EAGER)
+    Set<Account> accounts = new HashSet<>();
 
     public Client(){}
 
      public Client(String firstName, String lastName, String mail){
-        this.getId();
-        this.setFirstName(firstName);
-        this.setLastName(lastName);
-        this.setMail(mail);
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.mail = mail;
      }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
@@ -47,6 +52,14 @@ public class Client {
     public void setMail(String mail) {
         this.mail = mail;
     }
+
+    public Set<Account> getAccounts() {
+        return accounts;
+    }
+
+    public void addAccount(Account account) {
+        account.setOwner(this);
+        accounts.add(account);
+    }
+
 }
-
-
