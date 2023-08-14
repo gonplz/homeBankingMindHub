@@ -15,15 +15,15 @@ import java.util.stream.Collectors;
 public class ClientController {
 
     @Autowired
-    public ClientRepository clientRepository;
+    private ClientRepository clientRepository;
 
     @RequestMapping("/clients")
-    public List<ClientDTO> getClients(){
+    private List<ClientDTO> getClients(){
        return clientRepository.findAll().stream().map(client -> new ClientDTO(client)).collect(Collectors.toList());
    }
 
    @RequestMapping("/clients/{id}")
-    public ClientDTO getId(@PathVariable Long id){
+    private ClientDTO getId(@PathVariable Long id){
         return new ClientDTO(clientRepository.findById(id).orElse(null));
    }
 }

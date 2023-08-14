@@ -6,7 +6,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,11 +19,8 @@ public class Account {
     private Long id;
 
     private String number;
-
     private LocalDate creationDate;
-
     private LocalDateTime localDateTime;
-
     private Double balance;
 
     @ManyToOne(fetch = FetchType.EAGER)

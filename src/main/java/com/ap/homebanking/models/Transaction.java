@@ -15,7 +15,6 @@ public class Transaction {
     private Long id;
     //private Types type;
     private Double amount;
-
     private TransactionType type;
     private String description;
     private LocalDateTime date;
