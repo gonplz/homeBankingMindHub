@@ -82,19 +82,37 @@
                     <div class="row mt-3">
                         <div class="col">
                             <h2 class="display-6 subtitle">Accounts</h2>
+
                         </div>
                         <div class="row mx-2">
-                            <div v-for="{id, number, date, balance} in clientInfo.accounts"
-                                class="col-12 col-md-4 mt-2 ">
-                                <a class="account-link" v-bind:href="'/web/account.html?id='+id">
+                            <div v-for="account in clientInfo.accounts" class="col-12 col-md-4 mt-2 ">
+                                <a class="account-link" v-bind:href="'/web/account.html?id='+account.id">
                                     <div class="card border-0 account">
                                         <div class="card-body">
-                                            <h5 class="card-title">{{ number }}</h5>
-                                            <p class="card-text"> {{ formatDate(date) }}</p>
-                                            <p class="text-center lead account-balance"> ${{ balance }} </p>
+                                            <h5 class="card-title">{{ account.number }}</h5>
+                                            <p class="card-text"> {{ formatDate(account.date) }}</p>
+                                            <p class="text-center lead account-balance"> ${{ account.balance }} </p>
                                         </div>
                                     </div>
                                 </a>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col">
+                                <h2 class="display-6">Loans</h2>
+                                <span class="small" v-if="clientInfo.loan != null && clientInfo.loans.length <= 0">No
+                                    loans</span>
+                            </div>
+                        </div>
+                        <div class="row mx-2">
+                            <div v-for="loan in clientInfo.loans" class="col-12 col-md-4 mt-2">
+                                <div class="card border-0 loan">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ loan.name }}</h5>
+                                        <p class="card-text"> payments: {{ loan.payments}}</p>
+                                        <p class="text-center lead account-balance"> ${{ loan.amount }} </p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

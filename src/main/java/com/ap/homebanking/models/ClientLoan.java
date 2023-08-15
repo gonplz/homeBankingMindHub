@@ -33,43 +33,24 @@ public class ClientLoan {
         this.client= client;
         this.loan= loan;
     }
+    public Long getId() {return id;}
 
-    public Long getId() {
-        return id;
-    }
+    public Double getAmount() {return amount;}
 
-    public Double getAmount() {
-        return amount;
-    }
+    public Integer getPayments() {return payments;}
 
-    public Integer getPayments() {
-        return payments;
-    }
+    public Client getClient() {return client;}
 
-    public Client getClient() {
-        return client;
-    }
-
-    public Loan getLoan() {
-        return loan;
-    }
+    public Loan getLoan() {return loan;}
 
     ///////////////////////////////
 
+    public void setAmount(Double amount) {this.amount = amount;}
 
-    public void setAmount(Double amount) {
-        this.amount = amount;
-    }
+    public void setPayments(Integer payments) {this.payments = payments;}
 
-    public void setPayments(Integer payments) {
-        this.payments = payments;
-    }
+    public void setClient(Client client) {this.client = client;}
 
-    public void setClient(Client client) {
-        this.client = client;
-    }
+    public void setLoan(Loan loan) {this.loan = loan;}
 
-    public void setLoan(Loan loan) {
-        this.loan = loan;
-    }
 }
