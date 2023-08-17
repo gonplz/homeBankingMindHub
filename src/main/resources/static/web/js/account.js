@@ -1,6 +1,4 @@
-const { createApp } = Vue;
-
-createApp({
+Vue.createApp({
     data() {
         return {
             accountInfo: {},
@@ -9,7 +7,7 @@ createApp({
         }
     },
     methods: {
-        getData() {
+        getData: function () {
             const urlParams = new URLSearchParams(window.location.search);
             const id = urlParams.get('id');
             axios.get(`/api/accounts/${id}`)
@@ -24,12 +22,12 @@ createApp({
                     this.errorToats.show();
                 })
         },
-        formatDate(date) {
+        formatDate: function (date) {
             return new Date(date).toLocaleDateString('en-gb');
         }
     },
-    mounted() {
+    mounted: function () {
         this.errorToats = new bootstrap.Toast(document.getElementById('danger-toast'));
         this.getData();
     }
-}).mount('#app');
+}).mount('#app')

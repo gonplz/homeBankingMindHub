@@ -20,7 +20,8 @@ public class HomemakingApplication {
 
 	@Bean
 	public CommandLineRunner initData(ClientRepository clientRepository, AccountRepository accountRepository,
-									  TransactionRepository transactionRepository, LoanRepository loanRepository, ClientLoanRepository clientLoanRepository){
+									  TransactionRepository transactionRepository, LoanRepository loanRepository,
+									  ClientLoanRepository clientLoanRepository, CardRepository cardRepository){
 		return( args-> {
 
 
@@ -52,7 +53,7 @@ public class HomemakingApplication {
 			accountRepository.save(account1);
 			accountRepository.save(account2);
 
-			Loan loan1 = new Loan("HIP LOAN",600000.0, List.of(12,24, 36,48,60));
+			Loan loan1 = new Loan("HIP LOAN",600000.0, List.of(12,24,36,48,60));
 			Loan loan2= new Loan("SWITCH LOAN", 500000.0,List.of(3,6,12));
 
 			loanRepository.save(loan1);
@@ -69,6 +70,22 @@ public class HomemakingApplication {
 
 			clientLoanRepository.save(clientLoan1);
 			clientLoanRepository.save(clientLoan2);
+
+			Card card1 = new Card("Gonza Plaza", CardType.DEBIT, ColorType.GOLD,
+					"0000 5498 5555 7892",LocalDate.now(), LocalDate.now().plusYears(5),
+					132);
+
+			Card card2 = new Card("Gonza Plaza", CardType.CREDIT,ColorType.TITANIUM,
+					"0000 5489 5555 7214",LocalDate.now(),LocalDate.now().plusYears(5),
+					231);
+
+			client1.addCard(card1);
+			client1.addCard(card2);
+
+			cardRepository.save(card1);
+			cardRepository.save(card2);
+
+
 		});
 	}
 }

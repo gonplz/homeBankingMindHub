@@ -1,13 +1,9 @@
 package com.ap.homebanking.models;
 
-import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
-
 import javax.persistence.*;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Entity
 public class Client {
@@ -22,6 +18,9 @@ public class Client {
 
     @OneToMany (fetch = FetchType.EAGER, mappedBy = "client")
     private Set<ClientLoan> loans = new HashSet<>();
+
+    @OneToMany (fetch = FetchType.EAGER, mappedBy = "clientCard")
+    private Set<Card> cards = new HashSet<>();
 
     public Client(){}
 
@@ -87,5 +86,13 @@ public class Client {
 
     public void setLoans(Set<ClientLoan> loans) {
         this.loans = loans;
+    }
+
+
+    /////////////////////////CARDS//////////////////////////
+    public Set<Card> getCards() {return cards;}
+    public void addCard (Card card) {
+        card.setClientCard(this);
+        cards.add(card);
     }
 }
