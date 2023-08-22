@@ -14,7 +14,7 @@ public class CardDTO {
     private String number;
     private LocalDate thruDate;
     private LocalDate fromDate;
-    private Integer cvv;
+    private Long cvv;
 
     public CardDTO (Card card){
 
@@ -51,7 +51,7 @@ public class CardDTO {
         return fromDate;
     }
 
-    public Integer getCvv() {
+    public Long getCvv() {
         return cvv;
     }
 }

@@ -43,13 +43,11 @@ public class Loan {
     public Double getMaxAmount() {
         return maxAmount;
     }
-
     public List<Integer> getPayments() {
         return payments;
     }
 
     ////////////////////////////
-
 
     public void setName(String name) {
         this.name = name;

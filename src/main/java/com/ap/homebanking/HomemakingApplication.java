@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Bean;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 @SpringBootApplication
@@ -59,8 +58,8 @@ public class HomemakingApplication {
 			loanRepository.save(loan1);
 			loanRepository.save(loan2);
 
-			ClientLoan clientLoan1 = new ClientLoan(400000.0,60,client1,loan1);
-			ClientLoan clientLoan2 = new ClientLoan(50000.0, 12,client1,loan2);
+			ClientLoan clientLoan1 = new ClientLoan(400000.0,60);
+			ClientLoan clientLoan2 = new ClientLoan(50000.0, 12);
 
 			client1.addClientLoan(clientLoan1);
 			loan1.addClientLoan(clientLoan1);
@@ -72,19 +71,18 @@ public class HomemakingApplication {
 			clientLoanRepository.save(clientLoan2);
 
 			Card card1 = new Card("Gonza Plaza", CardType.DEBIT, ColorType.GOLD,
-					"0000 5498 5555 7892",LocalDate.now(), LocalDate.now().plusYears(5),
-					132);
+					"0000 5498 5555 7892",LocalDate.now().plusYears(5), LocalDate.now(),
+					148L);
 
 			Card card2 = new Card("Gonza Plaza", CardType.CREDIT,ColorType.TITANIUM,
-					"0000 5489 5555 7214",LocalDate.now(),LocalDate.now().plusYears(5),
-					231);
+					"0000 5489 5555 7214",LocalDate.now().plusYears(5),LocalDate.now(),
+					231L);
 
 			client1.addCard(card1);
 			client1.addCard(card2);
 
 			cardRepository.save(card1);
 			cardRepository.save(card2);
-
 
 		});
 	}

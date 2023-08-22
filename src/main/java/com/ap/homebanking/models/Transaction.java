@@ -3,7 +3,6 @@ package com.ap.homebanking.models;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-//import java.sql.Types;
 import java.time.LocalDateTime;
 
 @Entity

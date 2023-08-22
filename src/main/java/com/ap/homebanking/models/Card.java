@@ -18,7 +18,7 @@ public class Card {
     private String number;
     private LocalDate thruDate;
     private LocalDate fromDate;
-    private Integer cvv;
+    private Long cvv;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "clientCard_id")
@@ -27,7 +27,7 @@ public class Card {
     public Card(){}
 
     public Card(String cardHolder, CardType type, ColorType color, String number, LocalDate thruDate,
-                LocalDate fromDate, Integer cvv){
+                LocalDate fromDate, Long cvv){
 
         this.cardHolder = cardHolder;
         this.type = type;
@@ -68,7 +68,7 @@ public class Card {
         return fromDate;
     }
 
-    public Integer getCvv() {
+    public Long getCvv() {
         return cvv;
     }
 
@@ -102,7 +102,7 @@ public class Card {
         this.fromDate = fromDate;
     }
 
-    public void setCvv(Integer cvv) {
+    public void setCvv(Long cvv) {
         this.cvv = cvv;
     }
 
