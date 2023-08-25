@@ -1,12 +1,7 @@
 package com.ap.homebanking;
 
-import com.ap.homebanking.models.Account;
-import com.ap.homebanking.models.Client;
-import com.ap.homebanking.models.Transaction;
-import com.ap.homebanking.models.TransactionType;
-import com.ap.homebanking.repositories.AccountRepository;
-import com.ap.homebanking.repositories.ClientRepository;
-import com.ap.homebanking.repositories.TransactionRepository;
+import com.ap.homebanking.models.*;
+import com.ap.homebanking.repositories.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,7 +9,7 @@ import org.springframework.context.annotation.Bean;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.List;
 
 @SpringBootApplication
 public class HomemakingApplication {
@@ -23,7 +18,9 @@ public class HomemakingApplication {
 		SpringApplication.run(HomemakingApplication.class, args);}
 
 	@Bean
-	public CommandLineRunner initData(ClientRepository clientRepository, AccountRepository accountRepository, TransactionRepository transactionRepository){
+	public CommandLineRunner initData(ClientRepository clientRepository, AccountRepository accountRepository,
+									  TransactionRepository transactionRepository, LoanRepository loanRepository,
+									  ClientLoanRepository clientLoanRepository, CardRepository cardRepository){
 		return( args-> {
 
 
@@ -54,6 +51,38 @@ public class HomemakingApplication {
 			transactionRepository.save(transaction2);
 			accountRepository.save(account1);
 			accountRepository.save(account2);
+
+			Loan loan1 = new Loan("HIP LOAN",600000.0, List.of(12,24,36,48,60));
+			Loan loan2= new Loan("SWITCH LOAN", 500000.0,List.of(3,6,12));
+
+			loanRepository.save(loan1);
+			loanRepository.save(loan2);
+
+			ClientLoan clientLoan1 = new ClientLoan(400000.0,60);
+			ClientLoan clientLoan2 = new ClientLoan(50000.0, 12);
+
+			client1.addClientLoan(clientLoan1);
+			loan1.addClientLoan(clientLoan1);
+
+			client1.addClientLoan(clientLoan2);
+			loan2.addClientLoan(clientLoan2);
+
+			clientLoanRepository.save(clientLoan1);
+			clientLoanRepository.save(clientLoan2);
+
+			Card card1 = new Card("Gonza Plaza", CardType.DEBIT, ColorType.GOLD,
+					"0000 5498 5555 7892",LocalDate.now().plusYears(5), LocalDate.now(),
+					148L);
+
+			Card card2 = new Card("Gonza Plaza", CardType.CREDIT,ColorType.TITANIUM,
+					"0000 5489 5555 7214",LocalDate.now().plusYears(5),LocalDate.now(),
+					231L);
+
+			client1.addCard(card1);
+			client1.addCard(card2);
+
+			cardRepository.save(card1);
+			cardRepository.save(card2);
 
 		});
 	}

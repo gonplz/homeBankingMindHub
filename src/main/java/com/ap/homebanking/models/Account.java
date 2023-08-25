@@ -5,8 +5,6 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,13 +15,8 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
     private Long id;
-
     private String number;
-
     private LocalDate creationDate;
-
-    private LocalDateTime localDateTime;
-
     private Double balance;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -39,7 +32,6 @@ public class Account {
     public Account(String number, String creationDate, Double balance){
         this.number = number;
         this.creationDate = LocalDate.now();
-        this.localDateTime = LocalDateTime.now();
         this.balance = balance;
     }
 
@@ -85,6 +77,5 @@ public class Account {
         transaction.setOwnership(this);
         transactions.add(transaction);
     }
-
 
 }
