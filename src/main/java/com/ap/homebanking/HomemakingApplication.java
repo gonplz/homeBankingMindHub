@@ -2,10 +2,12 @@ package com.ap.homebanking;
 
 import com.ap.homebanking.models.*;
 import com.ap.homebanking.repositories.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,6 +15,9 @@ import java.util.List;
 
 @SpringBootApplication
 public class HomemakingApplication {
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	public static void main(String[] args) {
 		SpringApplication.run(HomemakingApplication.class, args);}
@@ -24,8 +29,8 @@ public class HomemakingApplication {
 		return( args-> {
 
 
-			Client client1 = new Client("Gonza", "Plaza","gonza@gmail.com");
-			Client client2 = new Client("Seba","Gale","seba@gmail.com");
+			Client client1 = new Client("Gonza", "Plaza","gonza@gmail.com", passwordEncoder.encode("1234"));
+			Client client2 = new Client("Seba","Gale","seba@gmail.com",passwordEncoder.encode("4321"));
 
 			Account account1 = new Account("VIN001","",5000.0);
 			LocalDate today = LocalDate.now();

@@ -69,7 +69,7 @@
                         </ul>
                         <hr>
                         <ul class="nav nav-pills flex-column mb-auto">
-                            <button class="btn btn-danger img-fluid">Sign out</button>
+                            <button class="btn btn-danger img-fluid" v-on:click="signOut">Sign out</button>
                         </ul>
                     </div>
                 </div>
@@ -82,7 +82,6 @@
                     <div class="row mt-3">
                         <div class="col">
                             <h2 class="display-6 subtitle">Accounts</h2>
-
                         </div>
                     </div>
                     <div class="row mx-2">
@@ -91,7 +90,7 @@
                                 <div class="card border-0 account">
                                     <div class="card-body">
                                         <h5 class="card-title">{{ account.number }}</h5>
-                                        <p class="card-text"> {{ formatDate(account.date) }}</p>
+                                        <p class="card-text"> {{ formatDate(account.creationDate) }}</p>
                                         <p class="text-center lead account-balance"> ${{ account.balance }} </p>
                                     </div>
                                 </div>
