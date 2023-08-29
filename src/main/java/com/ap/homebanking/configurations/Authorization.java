@@ -23,6 +23,7 @@ public class Authorization {
         http.authorizeRequests()
                 .antMatchers(HttpMethod.POST,"/api/clients").permitAll()
                 .antMatchers(HttpMethod.POST,"/api/login").permitAll()
+                .antMatchers(HttpMethod.POST,"/api/logout").permitAll()
                 .antMatchers("/web/index.html","/web/js/**","/web/css/**","/web/img/**").permitAll()
                 .antMatchers("/admin/**").hasAuthority("ADMIN")
                 .antMatchers(HttpMethod.GET,"/api/clients/current/**","/web/**").hasAuthority("CLIENT");

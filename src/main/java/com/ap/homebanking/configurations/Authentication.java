@@ -16,7 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 public class Authentication extends GlobalAuthenticationConfigurerAdapter {
     @Autowired
-    ClientRepository clientRepository;
+    private ClientRepository clientRepository;
 
     public void init(AuthenticationManagerBuilder auth) throws Exception {
 
@@ -25,6 +25,11 @@ public class Authentication extends GlobalAuthenticationConfigurerAdapter {
             Client client = clientRepository.findByEmail(inputName);
 
             if (client != null) {
+
+                if (client.getEmail().contains("@admin")){
+                    return new User(client.getEmail(), client.getPassword(),
+                            AuthorityUtils.createAuthorityList("ADMIN"));
+                }
 
                 return new User(client.getEmail(), client.getPassword(),
                         AuthorityUtils.createAuthorityList("CLIENT"));
