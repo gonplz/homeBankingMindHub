@@ -29,7 +29,7 @@ public class Account {
 
     public Account(){}
 
-    public Account(String number, String creationDate, Double balance){
+    public Account(String number, LocalDate creationDate, Double balance){
         this.number = number;
         this.creationDate = LocalDate.now();
         this.balance = balance;

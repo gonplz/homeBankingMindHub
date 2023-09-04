@@ -32,9 +32,9 @@ public class HomemakingApplication {
 			Client client1 = new Client("Gonza", "Plaza","gonza@gmail.com", passwordEncoder.encode("1234"));
 			Client client2 = new Client("Seba","Gale","seba@gmail.com",passwordEncoder.encode("4321"));
 
-			Account account1 = new Account("VIN001","",5000.0);
+			Account account1 = new Account("VIN001",LocalDate.now(),5000.0);
 			LocalDate today = LocalDate.now();
-			Account account2 = new Account("VIN002","",7500.0);
+			Account account2 = new Account("VIN002",LocalDate.now().plusDays(1),7500.0);
 			account2.setCreationDate(today.plusDays(1));
 
 			Transaction transaction1 = new Transaction(-500.0, TransactionType.DEBIT,"Carga", LocalDateTime.now());
@@ -77,11 +77,11 @@ public class HomemakingApplication {
 
 			Card card1 = new Card("Gonza Plaza", CardType.DEBIT, ColorType.GOLD,
 					"0000 5498 5555 7892",LocalDate.now().plusYears(5), LocalDate.now(),
-					148L);
+					148);
 
 			Card card2 = new Card("Gonza Plaza", CardType.CREDIT,ColorType.TITANIUM,
 					"0000 5489 5555 7214",LocalDate.now().plusYears(5),LocalDate.now(),
-					231L);
+					231);
 
 			client1.addCard(card1);
 			client1.addCard(card2);

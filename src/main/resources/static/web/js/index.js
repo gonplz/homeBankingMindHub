@@ -51,4 +51,3 @@ Vue.createApp({
         this.errorToats = new bootstrap.Toast(document.getElementById('danger-toast'));
     }
 }).mount('#app')
-
