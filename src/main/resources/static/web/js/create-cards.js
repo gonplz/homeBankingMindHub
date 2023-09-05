@@ -1,5 +1,4 @@
 Vue.createApp({
-
     data() {
         return {
             errorToats: null,
