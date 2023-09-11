@@ -32,18 +32,18 @@ public class ClientController {
     @Autowired
     private CardRepository cardRepository;
 
-    @RequestMapping("/clients")
+    @RequestMapping(value = "/clients", method = RequestMethod.GET)
     private List<ClientDTO> getClients(){
        return clientRepository.findAll().stream().map(client -> new ClientDTO(client)).collect(Collectors.toList());
    }
-
-   @RequestMapping("/clients/{id}")
+   @RequestMapping(value = "/clients/{id}", method = RequestMethod.GET)
     private ClientDTO getId(@PathVariable Long id){
         return new ClientDTO(clientRepository.findById(id).orElse(null));
    }
 
+
             ////////////////////////Creación de Cliente/////////////////////////
-    @RequestMapping(value = "/clients/current")
+    @RequestMapping(value = "/clients/current", method = RequestMethod.GET)
     public ClientDTO getClient(Authentication authentication) {
         return new ClientDTO(clientRepository.findByEmail(authentication.getName()));
     }

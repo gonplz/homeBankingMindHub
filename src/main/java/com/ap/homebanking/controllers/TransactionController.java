@@ -1,5 +1,6 @@
 package com.ap.homebanking.controllers;
 
+import com.ap.homebanking.dtos.AccountDTO;
 import com.ap.homebanking.dtos.TransactionDTO;
 import com.ap.homebanking.models.Account;
 import com.ap.homebanking.models.Client;
@@ -12,11 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,25 +33,26 @@ public class TransactionController {
     @Autowired
     private AccountRepository accountRepository;
 
-    @RequestMapping("/transactions")
+    @RequestMapping("/transaction")
     public List<TransactionDTO> getTransactions(){
         return transactionRepository.findAll().stream().map(element -> new  TransactionDTO(element)).collect(Collectors.toList());
     }
-
-    @RequestMapping("/transactions/{id}")
-    public TransactionDTO gettransactions (@PathVariable Long id){
+    @RequestMapping("/transaction/{id}")
+    public TransactionDTO gettransactions (@PathVariable Long id) {
         return new TransactionDTO(transactionRepository.findById(id).orElse(null));
     }
 
+    @Transactional
+    @RequestMapping(value = "/transactions", method = RequestMethod.POST)
     public ResponseEntity<Object> createdTransaction (
-            @RequestParam Double amount, @RequestParam String description,
-            @RequestParam String fromAccountNumber, @RequestParam String toAccounNumber, Authentication authentication){
+            @RequestParam String fromAccountNumber, @RequestParam String toAccountNumber,
+            @RequestParam Double amount, @RequestParam String description,Authentication authentication){
 
         Client clientAuth = clientRepository.findByEmail(authentication.getName());
         Account accountSource = accountRepository.findByNumber(fromAccountNumber);
-        Account accountDestination = accountRepository.findByNumber(toAccounNumber);
+        Account accountDestination = accountRepository.findByNumber(toAccountNumber);
 
-        if (amount == null) {
+        if (amount <= 0) {
             return new ResponseEntity<>("Missing Data, amount is required", HttpStatus.FORBIDDEN);}
 
         if (description.isBlank()) {
@@ -61,10 +61,10 @@ public class TransactionController {
         if (fromAccountNumber.isBlank()) {
             return new ResponseEntity<>("Missing Data, source account is required", HttpStatus.FORBIDDEN);}
 
-        if (toAccounNumber.isBlank()) {
+        if (toAccountNumber.isBlank()) {
             return new ResponseEntity<>("Missing Data, destination account is required", HttpStatus.FORBIDDEN);}
 
-        if (fromAccountNumber.equals(toAccounNumber)) {
+        if (fromAccountNumber.equals(toAccountNumber)) {
             return new ResponseEntity<>("You are not allowed to perform this operation", HttpStatus.FORBIDDEN);}
 
         if (!accountRepository.existsByNumber(fromAccountNumber)) {
@@ -73,7 +73,7 @@ public class TransactionController {
         if (!clientAuth.getAccounts().contains(accountSource)) {
             return new ResponseEntity<>("The source account does not belong to the authenticated client ", HttpStatus.FORBIDDEN);}
 
-        if (!accountRepository.existsByNumber(toAccounNumber)) {
+        if (!accountRepository.existsByNumber(toAccountNumber)) {
             return new ResponseEntity<>("Account destination don't exists", HttpStatus.FORBIDDEN);}
 
         if (accountSource.getBalance() < amount) {
@@ -87,7 +87,7 @@ public class TransactionController {
         accountRepository.save(accountSource);
 
         /////////////////////////////////Credit Transaction
-        Transaction transactionCredit = new Transaction(amount, TransactionType.CREDIT, " CREDIT " + toAccounNumber,LocalDateTime.now());
+        Transaction transactionCredit = new Transaction(amount, TransactionType.CREDIT, " CREDIT " + toAccountNumber,LocalDateTime.now());
         accountDestination.setBalance(accountDestination.getBalance() + amount);
         accountDestination.addTransaction(transactionCredit);
         transactionRepository.save(transactionCredit);

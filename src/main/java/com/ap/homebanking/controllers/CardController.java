@@ -39,7 +39,7 @@ public class CardController {
     }
 
     @RequestMapping(value = "/clients/current/cards", method = RequestMethod.POST)
-    public ResponseEntity<Object> createdCard (@RequestParam CardType cardType, @RequestParam ColorType colorType, Authentication authentication){
+    public ResponseEntity<Object> createdCard (@RequestParam CardType cardType, @RequestParam ColorType cardColor, Authentication authentication){
 
         Client clientAuth = clientRepository.findByEmail(authentication.getName());
 
@@ -59,7 +59,7 @@ public class CardController {
 
         while (cardRepository.existsByNumber(numberCard));
         Card newCard = new Card(clientAuth.getFirstName() + " "+ clientAuth.getLastName(),
-                cardType, colorType, numberCard,LocalDate.now(), LocalDate.now().plusYears(5),cvv);
+                cardType, cardColor, numberCard,LocalDate.now(), LocalDate.now().plusYears(5),cvv);
         clientAuth.addCard(newCard);
         cardRepository.save(newCard);
         return new ResponseEntity<> (HttpStatus.CREATED);
