@@ -95,13 +95,16 @@ public class LoanController {
         }
 
         ClientLoan clientLoan = new ClientLoan(loanApplicationDTO.getAmount()+ amount*0.2, loanApplicationDTO.getPayments());
-        Transaction transactionLoan = new Transaction(amount,TransactionType.CREDIT,"Loan Approved",LocalDateTime.now());
-        accountDestination.addTransaction(transactionLoan);
 
         loan.addClientLoan(clientLoan);
         clientAuth.addClientLoan(clientLoan);
-
         clientLoanRepository.save(clientLoan);
+
+        Transaction transactionLoan = new Transaction(amount,TransactionType.CREDIT,"Loan Approved",LocalDateTime.now());
+        accountDestination.addTransaction(transactionLoan);
+        // Suma el balance de la cuenta:
+        accountDestination.setBalance(accountDestination.getBalance() + amount);
+
         transactionService.createdTransaction(transactionLoan);
         accountService.createdAccount(accountDestination);
 
