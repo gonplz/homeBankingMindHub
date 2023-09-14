@@ -22,27 +22,13 @@ public class Authorization {
 
         http.authorizeRequests()
 
-                .antMatchers("/web/index.html", "/web/js/","/web/css/","/web/img/").permitAll()
+                .antMatchers("/web/index.html", "/web/js/**","/web/css/**","/web/img/**").permitAll()
                 .antMatchers(HttpMethod.POST,"/api/login","/api/logout","/api/clients").permitAll()
                 .antMatchers("/h2-console/","/rest/", "/api/clients").hasAuthority("ADMIN")
                 .antMatchers("/api/**","/api/clients/{id}","/loans").hasAuthority("CLIENT")
-                .antMatchers("/api/clients/current", "/web/","/api/clients/","/clients/current/accounts").hasAuthority("CLIENT")
-                .antMatchers(HttpMethod.POST, "/clients/current/accounts/**","/clients/current/cards","/transactions","/loans").hasAuthority("CLIENT");
-
-//                .antMatchers(HttpMethod.POST,"/api/login","/api/clients").permitAll()
-//                .antMatchers( "/web/index.html", "/web/js/", "/web/css/", "/web/img/").permitAll()
-//                .antMatchers(HttpMethod.GET,"/admin/", "/rest/","/api/clients", "/api/accounts").hasAuthority("ADMIN")
-//                .antMatchers( "/api/clients/current", "/web/","/api/logout","/api/clients/current/accounts",
-//                        "/api/clients/current/cards", "/api/transactions/*","/api/accounts","/api/accounts/", "/api/loans").hasAnyAuthority("CLIENT", "ADMIN")
-//                .antMatchers(HttpMethod.POST, "/api/clients/current", "/api/transactions").hasAnyAuthority("CLIENT", "ADMIN")
-//                .anyRequest().denyAll();
-
-//                .antMatchers(HttpMethod.POST,"/api/clients","/api/login").permitAll()
-//                .antMatchers(HttpMethod.POST,"/api/logout").hasAnyAuthority("CLIENT","ADMIN")
-//                .antMatchers("/web/index.html","/web/js/**","/web/css/**","/web/img/**").permitAll()
-//                .antMatchers("/admin/**").hasAuthority("ADMIN")
-//                .antMatchers("/api/clients/current","/web/**","/api/clients/current/cards","/api/clients/current/accounts",
-//                        "/api/transaction","/api/transactions/**").hasAnyAuthority("CLIENT","ADMIN");
+                .antMatchers("/api/clients/current", "/web/**","/api/clients/","/clients/current/accounts").hasAuthority("CLIENT")
+                .antMatchers(HttpMethod.POST, "/clients/current/accounts/**","/clients/current/cards","/transactions","/loans").hasAuthority("CLIENT")
+                .anyRequest().denyAll();
 
         http.formLogin()
                 .usernameParameter("email")

@@ -1,6 +1,5 @@
 package com.ap.homebanking.controllers;
 
-import com.ap.homebanking.dtos.AccountDTO;
 import com.ap.homebanking.dtos.TransactionDTO;
 import com.ap.homebanking.models.Account;
 import com.ap.homebanking.models.Client;
@@ -9,6 +8,9 @@ import com.ap.homebanking.models.TransactionType;
 import com.ap.homebanking.repositories.AccountRepository;
 import com.ap.homebanking.repositories.ClientRepository;
 import com.ap.homebanking.repositories.TransactionRepository;
+import com.ap.homebanking.service.AccountService;
+import com.ap.homebanking.service.ClientService;
+import com.ap.homebanking.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,82 +20,149 @@ import org.springframework.web.bind.annotation.*;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
 public class TransactionController {
 
     @Autowired
-    private TransactionRepository transactionRepository;
+    private TransactionService transactionService;
 
     @Autowired
-    private ClientRepository clientRepository;
+    private ClientService clientService;
 
     @Autowired
-    private AccountRepository accountRepository;
+    private AccountService accountService;
 
-    @RequestMapping("/transaction")
-    public List<TransactionDTO> getTransactions(){
-        return transactionRepository.findAll().stream().map(element -> new  TransactionDTO(element)).collect(Collectors.toList());
-    }
-    @RequestMapping("/transaction/{id}")
-    public TransactionDTO gettransactions (@PathVariable Long id) {
-        return new TransactionDTO(transactionRepository.findById(id).orElse(null));
-    }
+    @RequestMapping("/transactions")
+    public List<TransactionDTO> getTransactions(){return transactionService.getTransactions();}
+    @RequestMapping("/transactions/{id}")
+    public TransactionDTO getTransactions (@PathVariable Long id){
+        return new TransactionDTO(transactionService.getTransactionById(id));}
+
 
     @Transactional
-    @RequestMapping(value = "/transactions", method = RequestMethod.POST)
+    @RequestMapping (value = "/transactions",method = RequestMethod.POST)
     public ResponseEntity<Object> createdTransaction (
-            @RequestParam String fromAccountNumber, @RequestParam String toAccountNumber,
-            @RequestParam Double amount, @RequestParam String description,Authentication authentication){
+            @RequestParam Double amount, @RequestParam String description,
+            @RequestParam String fromAccountNumber ,@RequestParam String toAccountNumber,
+            Authentication authentication) {
 
-        Client clientAuth = clientRepository.findByEmail(authentication.getName());
-        Account accountSource = accountRepository.findByNumber(fromAccountNumber);
-        Account accountDestination = accountRepository.findByNumber(toAccountNumber);
+        Client clientAuth = clientService.getCurrentClient(authentication.getName());
+        Account accountSource = accountService.findByNumber(fromAccountNumber);
+        Account accountDestination = accountService.findByNumber(toAccountNumber);
 
-        if (amount <= 0) {
-            return new ResponseEntity<>("Missing Data, amount is required", HttpStatus.FORBIDDEN);}
-
+        //Verificar que los parámetros no estén vacíos
+        if (amount == null) {
+            return new ResponseEntity<>("Missing Data, amount is required", HttpStatus.FORBIDDEN);
+        }
         if (description.isBlank()) {
-            return new ResponseEntity<>("Missing Data, description is required", HttpStatus.FORBIDDEN);}
-
+            return new ResponseEntity<>("Missing Data, description is required", HttpStatus.FORBIDDEN);
+        }
         if (fromAccountNumber.isBlank()) {
-            return new ResponseEntity<>("Missing Data, source account is required", HttpStatus.FORBIDDEN);}
-
+            return new ResponseEntity<>("Missing Data, source account is required", HttpStatus.FORBIDDEN);
+        }
         if (toAccountNumber.isBlank()) {
-            return new ResponseEntity<>("Missing Data, destination account is required", HttpStatus.FORBIDDEN);}
+            return new ResponseEntity<>("Missing Data, destination account is required", HttpStatus.FORBIDDEN);
+        }
+        // Verificar que los números de cuenta no sean iguales
 
         if (fromAccountNumber.equals(toAccountNumber)) {
-            return new ResponseEntity<>("You are not allowed to perform this operation", HttpStatus.FORBIDDEN);}
+            return new ResponseEntity<>("You are not allowed to perform this operation", HttpStatus.FORBIDDEN);
+        }
+        //Verificar que exista la cuenta de origen
 
-        if (!accountRepository.existsByNumber(fromAccountNumber)) {
-            return new ResponseEntity<>("Source account don't exists", HttpStatus.FORBIDDEN);}
-
+        if (!accountService.existByNumber(fromAccountNumber)) {
+            return new ResponseEntity<>("Source account don't exists", HttpStatus.FORBIDDEN);
+        }
+        //Verificar que la cuenta de origen pertenezca al cliente autenticado
         if (!clientAuth.getAccounts().contains(accountSource)) {
-            return new ResponseEntity<>("The source account does not belong to the authenticated client ", HttpStatus.FORBIDDEN);}
+            return new ResponseEntity<>("The source account does not belong to the authenticated client ", HttpStatus.FORBIDDEN);
+        }
 
-        if (!accountRepository.existsByNumber(toAccountNumber)) {
-            return new ResponseEntity<>("Account destination don't exists", HttpStatus.FORBIDDEN);}
+        //Verificar que exista la cuenta de destino
+        if (!accountService.existByNumber(toAccountNumber)) {
+            return new ResponseEntity<>("Account destination don't exists", HttpStatus.FORBIDDEN);
+        }
 
+        //Verificar que la cuenta de origen tenga el monto disponible.
         if (accountSource.getBalance() < amount) {
-            return new ResponseEntity<>("Insufficient funds", HttpStatus.FORBIDDEN);}
+            return new ResponseEntity<>("Insufficient funds", HttpStatus.FORBIDDEN);
+        }
 
-        ///////////////////////////////////Debit Transaction
+        //Creacion de tipos de transacciones
+
+        //Debit Transaction
         Transaction transactionDebit = new Transaction(-amount, TransactionType.DEBIT, "DEBIT" + fromAccountNumber, LocalDateTime.now());
         accountSource.addTransaction(transactionDebit);
         accountSource.setBalance(accountSource.getBalance() - amount);
-        transactionRepository.save(transactionDebit);
-        accountRepository.save(accountSource);
+        transactionService.createdTransaction(transactionDebit);
+        accountService.createdAccount(accountSource);
 
-        /////////////////////////////////Credit Transaction
+        // Credit Transaction
         Transaction transactionCredit = new Transaction(amount, TransactionType.CREDIT, " CREDIT " + toAccountNumber,LocalDateTime.now());
         accountDestination.setBalance(accountDestination.getBalance() + amount);
         accountDestination.addTransaction(transactionCredit);
-        transactionRepository.save(transactionCredit);
-        accountRepository.save(accountDestination);
-
+        transactionService.createdTransaction(transactionCredit);
+        accountService.createdAccount(accountDestination);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }
+
+
+
+//    @Transactional
+//    @RequestMapping(value = "/transactions", method = RequestMethod.POST)
+//    public ResponseEntity<Object> createdTransaction (
+//            @RequestParam String fromAccountNumber, @RequestParam String toAccountNumber,
+//            @RequestParam Double amount, @RequestParam String description,Authentication authentication){
+//
+//        Client clientAuth = clientRepository.findByEmail(authentication.getName());
+//        Account accountSource = accountRepository.findByNumber(fromAccountNumber);
+//        Account accountDestination = accountRepository.findByNumber(toAccountNumber);
+//
+//        if (amount <= 0) {
+//            return new ResponseEntity<>("Missing Data, amount is required", HttpStatus.FORBIDDEN);}
+//
+//        if (description.isBlank()) {
+//            return new ResponseEntity<>("Missing Data, description is required", HttpStatus.FORBIDDEN);}
+//
+//        if (fromAccountNumber.isBlank()) {
+//            return new ResponseEntity<>("Missing Data, source account is required", HttpStatus.FORBIDDEN);}
+//
+//        if (toAccountNumber.isBlank()) {
+//            return new ResponseEntity<>("Missing Data, destination account is required", HttpStatus.FORBIDDEN);}
+//
+//        if (fromAccountNumber.equals(toAccountNumber)) {
+//            return new ResponseEntity<>("You are not allowed to perform this operation", HttpStatus.FORBIDDEN);}
+//
+//        if (!accountRepository.existsByNumber(fromAccountNumber)) {
+//            return new ResponseEntity<>("Source account don't exists", HttpStatus.FORBIDDEN);}
+//
+//        if (!clientAuth.getAccounts().contains(accountSource)) {
+//            return new ResponseEntity<>("The source account does not belong to the authenticated client ", HttpStatus.FORBIDDEN);}
+//
+//        if (!accountRepository.existsByNumber(toAccountNumber)) {
+//            return new ResponseEntity<>("Account destination don't exists", HttpStatus.FORBIDDEN);}
+//
+//        if (accountSource.getBalance() < amount) {
+//            return new ResponseEntity<>("Insufficient funds", HttpStatus.FORBIDDEN);}
+//
+//        ///////////////////////////////////Debit Transaction
+//        Transaction transactionDebit = new Transaction(-amount, TransactionType.DEBIT, "DEBIT" + fromAccountNumber, LocalDateTime.now());
+//        accountSource.addTransaction(transactionDebit);
+//        accountSource.setBalance(accountSource.getBalance() - amount);
+//        transactionRepository.save(transactionDebit);
+//        accountRepository.save(accountSource);
+//
+//        /////////////////////////////////Credit Transaction
+//        Transaction transactionCredit = new Transaction(amount, TransactionType.CREDIT, " CREDIT " + toAccountNumber,LocalDateTime.now());
+//        accountDestination.setBalance(accountDestination.getBalance() + amount);
+//        accountDestination.addTransaction(transactionCredit);
+//        transactionRepository.save(transactionCredit);
+//        accountRepository.save(accountDestination);
+//
+//
+//        return new ResponseEntity<>(HttpStatus.CREATED);
+//    }
