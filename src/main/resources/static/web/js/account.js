@@ -14,7 +14,8 @@ Vue.createApp({
                 .then((response) => {
                     //get client ifo
                     this.accountInfo = response.data;
-                    this.accountInfo.transactions.sort((a, b) => parseInt(b.id - a.id))
+                    console.log(this.accountInfo);
+                    this.accountInfo.transactions.sort((a, b) => (b.id - a.id))
                 })
                 .catch((error) => {
                     // handle error
@@ -24,7 +25,15 @@ Vue.createApp({
         },
         formatDate: function (date) {
             return new Date(date).toLocaleDateString('en-gb');
-        }
+        },
+        signOut: function () {
+            axios.post('/api/logout')
+                .then(response => window.location.href = "/web/index.html")
+                .catch(() => {
+                    this.errorMsg = "Sign out failed"
+                    this.errorToats.show();
+                })
+        },
     },
     mounted: function () {
         this.errorToats = new bootstrap.Toast(document.getElementById('danger-toast'));

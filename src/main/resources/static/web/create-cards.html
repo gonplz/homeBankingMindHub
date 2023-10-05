@@ -9,16 +9,11 @@
         integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="css/style.css">
-    <title>Accounts</title>
+    <title>Create cards</title>
 </head>
 
 <body>
-    <style>
-        [v-cloak] {
-            display: none;
-        }
-    </style>
-    <div id="app" v-cloak>
+    <div id="app">
         <div class="toast-container position-absolute p-3 top-0 end-0" id="toastPlacement">
             <div id="danger-toast" data-bs-delay="2000" class="toast align-items-center text-white bg-danger border-0"
                 role="alert" aria-live="assertive" aria-atomic="true">
@@ -42,14 +37,14 @@
                         </a>
                         <hr>
                         <ul class="nav nav-pills flex-column mb-auto">
-                            <li class="nav-item">
-                                <a href="/web/accounts.html" class="nav-link active">
+                            <li>
+                                <a href="/web/accounts.html" class="nav-link link-dark">
                                     <i class="bi bi-inboxes"></i>
                                     Accounts
                                 </a>
                             </li>
-                            <li>
-                                <a href="/web/cards.html" class="nav-link link-dark">
+                            <li class="nav-item">
+                                <a href="/web/cards.html" class="nav-link active">
                                     <i class="bi bi-credit-card"></i>
                                     Cards
                                 </a>
@@ -73,49 +68,40 @@
                         </ul>
                     </div>
                 </div>
-                <div class="col">
-                    <div class="row">
-                        <div class="col">
-                            <h1 class="display-1">{{ clientInfo.firstName }} {{ clientInfo.lastName }}</h1>
-                        </div>
-                    </div>
+                <div class="col offset-md-2">
                     <div class="row mt-3">
-                        <div class="col">
-                            <h2 class="display-6 subtitle">Accounts</h2>
-                            <button v-if="clientInfo.accounts != null && clientInfo.accounts.length < 3"
-                                v-on:click="create" id="create" class="btn btn-sm btn-success">Create</button>
-                        </div>
-                    </div>
-                    <div class="row mx-2">
-                        <div v-for="account in clientInfo.accounts" class="col-12 col-md-4 mt-2 ">
-                            <a class="account-link" v-bind:href="'/web/account.html?id='+account.id">
-                                <div class="card border-0 account">
-                                    <div class="card-body">
-                                        <h5 class="card-title">{{ account.number }}</h5>
-                                        <p class="card-text"> {{ formatDate(account.date) }}</p>
-                                        <p class="text-center lead account-balance"> ${{ account.balance }} </p>
+                        <div class="col-6">
+                            <h2 class="display-6 subtitle">Create cards</h2>
+                            <form class="mt-4" v-on:submit="create($event)">
+                                <div class="row mb-3">
+                                    <label for="card-type" class="col-sm-4 col-form-label ">Card type:</label>
+                                    <div class="col-sm-7">
+                                        <select id="card-type" v-model="cardType" class="form-select"
+                                            aria-label="Default select example" required>
+                                            <option value="none">Open this select menu</option>
+                                            <option value="CREDIT">Credit</option>
+                                            <option value="DEBIT">Debit</option>
+                                        </select>
                                     </div>
                                 </div>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col">
-                            <h2 class="display-6">Loans</h2>
-                            <span class="small" v-if="clientInfo.loan != null && clientInfo.loans.length <= 0">No
-                                loans</span>
-                        </div>
-                    </div>
-                    <div class="row mx-2">
-                        <div v-for="loan in clientInfo.loans" class="col-12 col-md-4 mt-2">
-                            <div class="card border-0 loan">
-                                <div class="card-body">
-                                    <h5 class="card-title">{{ loan.name }}</h5>
-                                    <p class="card-text"> payments: {{ loan.payments}}</p>
-                                    <p class="text-center lead account-balance"> ${{ loan.amount }} </p>
+                                <div class="row mb-3">
+                                    <label for="card-color" class="col-sm-4 col-form-label">Card Color:</label>
+                                    <div class="col-sm-7">
+                                        <select id="card-color" v-model="cardColor" class="form-select"
+                                            aria-label="Default select example" required>
+                                            <option value="none">Open this select menu</option>
+                                            <option value="SILVER">Silver</option>
+                                            <option value="GOLD">Gold</option>
+                                            <option value="TITANIUM">Titanium</option>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
+                                <button type="submit" class="btn btn-sm btn-success">Create</button>
+                            </form>
                         </div>
+                    </div>
+                    <div class="row">
+
                     </div>
                 </div>
             </div>
@@ -127,7 +113,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
         crossorigin="anonymous"></script>
-    <script src="js/accounts.js"></script>
+    <script src="js/create-cards.js"></script>
 </body>
 
 </html>

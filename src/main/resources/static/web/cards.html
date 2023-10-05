@@ -70,7 +70,7 @@
                         </ul>
                         <hr>
                         <ul class="nav nav-pills flex-column mb-auto">
-                            <button class="btn btn-danger img-fluid">Sign out</button>
+                            <button class="btn btn-danger img-fluid" v-on:click="signOut">Sign out</button>
                         </ul>
                     </div>
                 </div>
@@ -83,6 +83,8 @@
                     <div class="row mt-3">
                         <div class="col">
                             <h2 class="display-6 subtitle">Debit Cards</h2>
+                            <a v-if="clientInfo.cards != null && clientInfo.cards.length < 6" href="create-cards.html"
+                                id="create" class="btn btn-sm btn-success">Create</a>
                             <div v-if="debitCards.length <= 0"><span class="small">No debit cards</span></div>
                         </div>
                     </div>
